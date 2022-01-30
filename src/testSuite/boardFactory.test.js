@@ -25,8 +25,8 @@ test("GameBoard to Generate 2 space Ship Vertically on 3x3 grid", () => {
 
   let desiredAxis = "Vertical";
   currentBoard.placeShip(ship, desiredAxis, 0);
-  expect(currentBoard.grid[0]).toEqual("o");
-  expect(currentBoard.grid[3]).toEqual("o");
+  expect(currentBoard.grid[0]).toEqual("p");
+  expect(currentBoard.grid[3]).toEqual("p");
 });
 
 test("GameBoard to Generate 2 space Ship Horizontally on 3x3 grid", () => {
@@ -34,8 +34,8 @@ test("GameBoard to Generate 2 space Ship Horizontally on 3x3 grid", () => {
 
   let desiredAxis = "Horizontal";
   currentBoard.placeShip(ship, desiredAxis, 0);
-  expect(currentBoard.grid[0]).toEqual("o");
-  expect(currentBoard.grid[1]).toEqual("o");
+  expect(currentBoard.grid[0]).toEqual("p");
+  expect(currentBoard.grid[1]).toEqual("p");
   expect(currentBoard.grid[2]).toEqual("w");
 });
 
@@ -43,7 +43,6 @@ test("Testing overextending boundaries horizontally! Ship length 2 board size 3x
   const currentBoard = gameBoardFactory(3);
 
   let desiredAxis = "Horizontal";
-  //   currentBoard.placeShip(ship, desiredAxis, 2);
   expect(() => currentBoard.placeShip(ship, desiredAxis, 2)).toThrow(Error);
 });
 
@@ -59,8 +58,21 @@ test("GameBoard to Generate 2 space Ship Horizontally on 10x10 grid", () => {
 
   let desiredAxis = "Horizontal";
   currentBoard.placeShip(ship, desiredAxis, 4);
-  expect(currentBoard.grid[4]).toEqual("o");
-  expect(currentBoard.grid[5]).toEqual("o");
+  expect(currentBoard.grid[4]).toEqual("p");
+  expect(currentBoard.grid[5]).toEqual("p");
+});
+
+test("GameBoard to Generate 2 space Ship Horizontally on 3x3 grid", () => {
+  const currentBoard = gameBoardFactory(3);
+
+  let desiredAxis = "Horizontal";
+  currentBoard.placeShip(ship, desiredAxis, 0);
+  currentBoard.receiveAttack(0);
+  currentBoard.receiveAttack(1);
+  currentBoard.receiveAttack(2);
+  expect(currentBoard.grid[0]).toEqual("h");
+  expect(currentBoard.grid[1]).toEqual("h");
+  expect(currentBoard.grid[2]).toEqual("m");
 });
 
 // test("Place 5 place Ship on 10x10 grid", () => {

@@ -17,6 +17,7 @@ const ship = {
   sunk: false,
 };
 
+// m = miss, w="water", h = hit,
 const gameBoardFactory = function makeBoard(num) {
   return {
     grid: gameGrid(num),
@@ -25,9 +26,11 @@ const gameBoardFactory = function makeBoard(num) {
       const gridSize = Math.sqrt(this.grid.length);
 
       if (desiredAxis === "Vertical") {
-        if (placementOrigin + ship.length * gridSize < 100)
+        if (placementOrigin + ship.length * gridSize <= 100)
           for (let i = 0; i < ship.length; i++) {
-            this.grid[placementOrigin + gridSize * i] = "o";
+            this.grid[placementOrigin + gridSize * i] = ship.name
+              .split("")[0]
+              .toLowerCase();
           }
         else {
           throw Error("Extended Past the Grid Vertically!");
@@ -38,11 +41,22 @@ const gameBoardFactory = function makeBoard(num) {
           Math.ceil((placementOrigin + 1) / 10) * gridSize
         ) {
           for (let i = 0; i < ship.length; i++) {
-            this.grid[placementOrigin + i] = "o";
+            this.grid[placementOrigin + i] = ship.name
+              .split("")[0]
+              .toLowerCase();
           }
         } else {
           throw Error("Extended Past the Grid Horizontally!");
         }
+      }
+    },
+    receiveAttack(tile) {
+      if (this.grid[tile] === "m" || this.grid[tile] === "h") {
+        return;
+      } else if (this.grid[tile] === "w") {
+        this.grid[tile] = "m";
+      } else {
+        this.grid[tile] = "h";
       }
     },
   };
