@@ -3,8 +3,6 @@ const hitShip = (ship) => {
     let index = ship.spaces.indexOf("o");
     ship.spaces.splice(index, 1, "x");
     return ship;
-    // ship.spaces.splice("index", 1, "x");
-    // return ship.spaces;
   }
 };
 

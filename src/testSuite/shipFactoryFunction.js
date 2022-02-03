@@ -1,9 +1,14 @@
+const hitShip = require("./hitShip");
+const sunk = require("./sunk");
+
 const shipFactoryFunction = function makeShip(name, length) {
   return {
-    name,
+    name: name.toLowerCase(),
     length,
     spaces: Array(length).fill("o"),
-    sunk: false,
+    hitShip,
+    sunk,
+    isSunk: false,
   };
 };
 module.exports = shipFactoryFunction;

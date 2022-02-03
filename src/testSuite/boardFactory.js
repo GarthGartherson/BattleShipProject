@@ -1,3 +1,6 @@
+const shipFactoryFunction = require("./shipFactoryFunction");
+const receiveAttack = require("./receiveAttack");
+
 const gameGrid = (num) => {
   let gameBoard = [];
   for (let row = 0; row < num; row++) {
@@ -10,12 +13,7 @@ const gameGrid = (num) => {
   return gameBoard;
 };
 
-const ship = {
-  name: "Patrol Boat",
-  length: 2,
-  spaces: ["o", "o"],
-  sunk: false,
-};
+const ship = shipFactoryFunction("Patrol", 2);
 
 // m = miss, w="water", h = hit,
 const gameBoardFactory = function makeBoard(num) {
@@ -28,37 +26,25 @@ const gameBoardFactory = function makeBoard(num) {
       if (desiredAxis === "Vertical") {
         if (placementOrigin + ship.length * gridSize <= 100)
           for (let i = 0; i < ship.length; i++) {
-            this.grid[placementOrigin + gridSize * i] = ship.name
-              .split("")[0]
-              .toLowerCase();
+            this.grid[placementOrigin + gridSize * i] = ship.name.toLowerCase();
           }
         else {
           throw Error("Extended Past the Grid Vertically!");
         }
       } else if ((desiredAxis = "Horizontal")) {
         if (
-          placementOrigin + ship.length <
+          placementOrigin + ship.length <=
           Math.ceil((placementOrigin + 1) / 10) * gridSize
         ) {
           for (let i = 0; i < ship.length; i++) {
-            this.grid[placementOrigin + i] = ship.name
-              .split("")[0]
-              .toLowerCase();
+            this.grid[placementOrigin + i] = ship.name.toLowerCase();
           }
         } else {
           throw Error("Extended Past the Grid Horizontally!");
         }
       }
     },
-    receiveAttack(tile) {
-      if (this.grid[tile] === "m" || this.grid[tile] === "h") {
-        return;
-      } else if (this.grid[tile] === "w") {
-        this.grid[tile] = "m";
-      } else {
-        this.grid[tile] = "h";
-      }
-    },
+    receiveAttack,
   };
 };
 
