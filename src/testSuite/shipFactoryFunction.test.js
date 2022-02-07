@@ -7,7 +7,7 @@ test("Test Ship Length Input", () => {
 });
 
 test("Test Ship Name", () => {
-  expect(ship1.name).toBe("carrier");
+  expect(ship1.name).toBe("Carrier");
 });
 
 test("Test to see correct ship spaces", () => {

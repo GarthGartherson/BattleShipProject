@@ -3,7 +3,7 @@ const sunk = require("./sunk");
 
 const shipFactoryFunction = function makeShip(name, length) {
   return {
-    name: name.toLowerCase(),
+    name: name,
     length,
     spaces: Array(length).fill("o"),
     hitShip,

@@ -1,5 +1,6 @@
-const shipFactoryFunction = require("./shipFactoryFunction");
 const receiveAttack = require("./receiveAttack");
+const boardAllSunk = require("./boardAllSunk");
+const shipArray = require("./shipArray");
 
 const gameGrid = (num) => {
   let gameBoard = [];
@@ -13,8 +14,6 @@ const gameGrid = (num) => {
   return gameBoard;
 };
 
-const ship = shipFactoryFunction("Patrol", 2);
-
 // m = miss, w="water", h = hit,
 const gameBoardFactory = function makeBoard(num) {
   return {
@@ -24,7 +23,7 @@ const gameBoardFactory = function makeBoard(num) {
       const gridSize = Math.sqrt(this.grid.length);
 
       if (desiredAxis === "Vertical") {
-        if (placementOrigin + ship.length * gridSize <= 100)
+        if (placementOrigin + (ship.length - 1) * gridSize <= 100)
           for (let i = 0; i < ship.length; i++) {
             this.grid[placementOrigin + gridSize * i] = ship.name.toLowerCase();
           }
@@ -45,6 +44,7 @@ const gameBoardFactory = function makeBoard(num) {
       }
     },
     receiveAttack,
+    boardAllSunk,
   };
 };
 
