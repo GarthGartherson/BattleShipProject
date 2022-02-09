@@ -24,18 +24,26 @@ nav {
   width: 40%;
   display: flex;
   flex-wrap: wrap;
-}
-
-.player-board {
   min-width: 200px;
   min-height: 200px;
-  background-color: violet;
+  background-color: #d4f1f9;
 }
 
-.computer-board {
-  min-width: 200px;
-  min-height: 200px;
-  background-color: magenta;
+.placement-board {
+  display: flex;
+  justify-content: center;
+}
+
+.board-container > .board.hide {
+  width: 40%;
+  display: none;
+}
+
+.ship-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
 }
 
 footer {
@@ -60,12 +68,36 @@ footer {
     min-width: 60vw;
     min-height: 60vw;
   }
+}
 
-  .player-board {
-    background-color: violet;
-  }
+/* Drag and Drop Code */
+body {
+  background: darksalmon;
+}
 
-  .computer-board {
-    background-color: magenta;
-  }
+.draggable {
+  background-color: grey;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}
+
+.draggable.carrier {
+  height: 240px;
+}
+
+/* want height bigger than the fill or it will look weird */
+.container {
+  /* display: inline-block; */
+  height: 10%;
+  width: 10%;
+}
+
+.hovered {
+  background: #f4f4f4;
+  border-style: dashed;
+}
+
+.invisible {
+  display: none;
 }

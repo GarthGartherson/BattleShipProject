@@ -9,60 +9,78 @@ const computerGameBoard = document.querySelector(".computer-board");
 
 const playerGameBoardObject = gameBoardFactory(10);
 
-async function initializeApp() {
+function initializeApp() {
   for (let i = 0; i < playerGameBoardObject.grid.length; i++) {
     let gridBox = document.createElement("div");
-    gridBox.style.width = "10%";
-    gridBox.style.height = "10%";
-    gridBox.style.backgroundColor = "purple";
+    gridBox.style.width = "calc(10% -2px)";
+    gridBox.style.height = "calc(10% - 2px)";
+    gridBox.draggable = false;
+    console.log(gridBox.style.width);
+    // gridBox.style.backgroundColor = "purple";
     gridBox.style.border = "solid black 1px";
     gridBox.dataset.boxNumber = i;
+    gridBox.classList.add("container");
     playerGameBoard.appendChild(gridBox);
   }
 
-  await document.addEventListener("click", (e) => {
-    playerGameBoardObject.placeShip(
-      shipArray[0],
-      "Vertical",
-      Number(e.target.dataset.boxNumber)
-    );
+  document.addEventListener("drop", (e) => {
+    try {
+      if (e.target.firstChild) {
+        e.target.firstChild.style.backgroundColor = "green";
+        e.target.firstChild.draggable = false;
+        playerGameBoardObject.placeShip(
+          shipArray[0],
+          "Vertical",
+          Number(e.target.dataset.boxNumber)
+        );
+      }
+    } catch (err) {
+      if (e.target.firstChild) {
+        e.target.firstChild.style.backgroundColor = "red";
+        e.target.firstChild.draggable = true;
+      }
+      console.log("errors");
+    }
     console.log(playerGameBoardObject.grid);
   });
 
-  await document.addEventListener("click", (e) => {
-    playerGameBoardObject.placeShip(
-      shipArray[0],
-      "Horizontal",
-      Number(e.target.dataset.boxNumber)
-    );
-    console.log(playerGameBoardObject.grid);
+  const draggables = document.querySelectorAll(".draggable");
+  const containers = document.querySelectorAll(".container");
+
+  draggables.forEach((draggable) => {
+    draggable.addEventListener("dragstart", () => {
+      draggable.classList.add("dragging");
+    });
+
+    draggable.addEventListener("dragend", () => {
+      draggable.classList.remove("dragging");
+      draggable.classList.remove("invisible");
+    });
+  });
+
+  containers.forEach((container) => {
+    container.addEventListener("dragover", (e) => {
+      e.preventDefault();
+
+      const draggable = document.querySelector(".dragging");
+      if (draggable) {
+        e.target.classList.add("hovered");
+      }
+      if (draggable && draggable.draggable === true) {
+        container.appendChild(draggable);
+        setTimeout(() => {
+          draggable.classList.add("invisible");
+        }, 0);
+      }
+    });
+
+    container.addEventListener("dragleave", (e) => {
+      document.querySelector(".dragging");
+      e.target.classList.remove("hovered");
+    });
   });
 
   console.log("done");
 }
 
 initializeApp();
-
-// gridBox.addEventListener("mouseenter", () => {
-//   gridBox.style.backgroundColor = "red";
-// });
-
-// function generateGrid(boxes = 16){
-//   let width = 960/boxes;
-//   let height = 960/boxes;
-//   console.log(height, width)
-//   for(let i= 0; i < boxes; i++){
-//       let row = document.createElement('div')
-//       for(let j=0; j< boxes; j++){
-//           let gridBox = document.createElement('div')
-//           gridBox.style.width = `${width}px`;
-//           gridBox.style.height = `${height}px`;
-//           gridBox.style.backgroundColor = 'purple';
-//           row.appendChild(gridBox)
-//           container.appendChild(row)
-//           gridBox.addEventListener('mouseenter', () => {
-//               gridBox.style.backgroundColor = 'red'
-//           })
-//       }
-//   }
-// }
