@@ -83,7 +83,20 @@ body {
 }
 
 .draggable.carrier {
-  height: 240px;
+  height: calc(500% + 10px);
+}
+
+.draggable.battleship {
+  height: calc(400% + 8px);
+}
+
+.draggable.submarine,
+.draggable.destroyer {
+  height: calc(300% + 6px);
+}
+
+.draggable.patrolboat {
+  height: calc(200% + 4px);
 }
 
 /* want height bigger than the fill or it will look weird */

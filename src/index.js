@@ -12,60 +12,47 @@ const playerGameBoardObject = gameBoardFactory(10);
 function initializeApp() {
   for (let i = 0; i < playerGameBoardObject.grid.length; i++) {
     let gridBox = document.createElement("div");
-    gridBox.style.width = "calc(10% -2px)";
-    gridBox.style.height = "calc(10% - 2px)";
-    gridBox.draggable = false;
-    console.log(gridBox.style.width);
-    // gridBox.style.backgroundColor = "purple";
-    gridBox.style.border = "solid black 1px";
+    gridBox.style.width = "10%";
+    gridBox.style.height = "10%";
+    // gridBox.draggable = false;
+    gridBox.style.border = "solid black .5px";
     gridBox.dataset.boxNumber = i;
     gridBox.classList.add("container");
     playerGameBoard.appendChild(gridBox);
   }
 
-  document.addEventListener("drop", (e) => {
-    try {
-      if (e.target.firstChild) {
-        e.target.firstChild.style.backgroundColor = "green";
-        e.target.firstChild.draggable = false;
-        playerGameBoardObject.placeShip(
-          shipArray[0],
-          "Vertical",
-          Number(e.target.dataset.boxNumber)
-        );
-      }
-    } catch (err) {
-      if (e.target.firstChild) {
-        e.target.firstChild.style.backgroundColor = "red";
-        e.target.firstChild.draggable = true;
-      }
-      console.log("errors");
-    }
-    console.log(playerGameBoardObject.grid);
-  });
-
   const draggables = document.querySelectorAll(".draggable");
   const containers = document.querySelectorAll(".container");
-
+  console.log(shipArray);
   draggables.forEach((draggable) => {
     draggable.addEventListener("dragstart", () => {
       draggable.classList.add("dragging");
     });
 
-    draggable.addEventListener("dragend", () => {
+    draggable.addEventListener("dragend", (e) => {
       draggable.classList.remove("dragging");
       draggable.classList.remove("invisible");
     });
   });
 
   containers.forEach((container) => {
+    container.addEventListener("dragstart", () => {
+      container.classList.remove("hovered");
+    });
+
     container.addEventListener("dragover", (e) => {
       e.preventDefault();
 
       const draggable = document.querySelector(".dragging");
+      console.log(draggable.draggable);
+      if (draggable.draggable === false) {
+        return;
+      }
+
       if (draggable) {
         e.target.classList.add("hovered");
       }
+
       if (draggable && draggable.draggable === true) {
         container.appendChild(draggable);
         setTimeout(() => {
@@ -75,9 +62,46 @@ function initializeApp() {
     });
 
     container.addEventListener("dragleave", (e) => {
-      document.querySelector(".dragging");
       e.target.classList.remove("hovered");
     });
+  });
+
+  document.addEventListener("drop", (e) => {
+    try {
+      let ship = shipArray.find(
+        (ship) => ship.name === e.target.firstChild.dataset.shipName
+      );
+      if (e.target.firstChild.classList[1]) {
+        e.target.firstChild.style.backgroundColor = "green";
+        e.target.firstChild.draggable = false;
+        playerGameBoardObject.placeShip(
+          ship,
+          "Vertical",
+          Number(e.target.dataset.boxNumber)
+        );
+      }
+      let nonEmptyBoxes = [];
+      for (let [index, box] of playerGameBoardObject.grid.entries()) {
+        if (box !== "w") {
+          nonEmptyBoxes.push(index);
+        }
+      }
+      for (let boxNumber of nonEmptyBoxes) {
+        console.log(boxNumber);
+        let element = document.querySelector(
+          `[data-box-number="${boxNumber}"]`
+        );
+        element.style.backgroundColor = "green";
+        // playerGameBoardObject.grid[boxNumber].backgroundColor = "green";
+      }
+    } catch (err) {
+      console.log(err);
+      if (e.target.firstChild) {
+        e.target.firstChild.style.backgroundColor = "red";
+        e.target.firstChild.draggable = true;
+      }
+    }
+    console.log(playerGameBoardObject.grid);
   });
 
   console.log("done");

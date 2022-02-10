@@ -18,8 +18,8 @@ test("GameBoard to Generate 2 space Ship Vertically on 3x3 grid", () => {
 
   let desiredAxis = "Vertical";
   currentBoard.placeShip(shipArray[4], desiredAxis, 0);
-  expect(currentBoard.grid[0]).toEqual("patrol boat");
-  expect(currentBoard.grid[3]).toEqual("patrol boat");
+  expect(currentBoard.grid[0]).toEqual("patrolboat");
+  expect(currentBoard.grid[3]).toEqual("patrolboat");
 });
 
 test("GameBoard to Generate 2 space Ship Horizontally on 3x3 grid", () => {
@@ -27,8 +27,8 @@ test("GameBoard to Generate 2 space Ship Horizontally on 3x3 grid", () => {
 
   let desiredAxis = "Horizontal";
   currentBoard.placeShip(shipArray[4], desiredAxis, 0);
-  expect(currentBoard.grid[0]).toEqual("patrol boat");
-  expect(currentBoard.grid[1]).toEqual("patrol boat");
+  expect(currentBoard.grid[0]).toEqual("patrolboat");
+  expect(currentBoard.grid[1]).toEqual("patrolboat");
   expect(currentBoard.grid[2]).toEqual("w");
 });
 
@@ -55,8 +55,8 @@ test("GameBoard to Generate 2 space Ship Horizontally on 10x10 grid", () => {
 
   let desiredAxis = "Horizontal";
   currentBoard.placeShip(shipArray[4], desiredAxis, 4);
-  expect(currentBoard.grid[4]).toEqual("patrol boat");
-  expect(currentBoard.grid[5]).toEqual("patrol boat");
+  expect(currentBoard.grid[4]).toEqual("patrolboat");
+  expect(currentBoard.grid[5]).toEqual("patrolboat");
 });
 
 test("Test Basic Hit Detection for places with ships and misses w/ 2 space ship", () => {

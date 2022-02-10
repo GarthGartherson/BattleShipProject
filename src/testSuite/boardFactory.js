@@ -23,7 +23,7 @@ const gameBoardFactory = function makeBoard(num) {
       const gridSize = Math.sqrt(this.grid.length);
 
       if (desiredAxis === "Vertical") {
-        if (placementOrigin + (ship.length - 1) * gridSize <= 100)
+        if (placementOrigin + (ship.length - 1) * gridSize < 100)
           for (let i = 0; i < ship.length; i++) {
             this.grid[placementOrigin + gridSize * i] = ship.name.toLowerCase();
           }
