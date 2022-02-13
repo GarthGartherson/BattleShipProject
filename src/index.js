@@ -7,6 +7,13 @@ import shipArray from "./testSuite/shipArray.js";
 const playerGameBoard = document.querySelector(".player-board");
 const computerGameBoard = document.querySelector(".computer-board");
 
+// Ship Size Selectors
+const defaultCarrier = document.querySelector(".defaultCarrier");
+const defaultBattleship = document.querySelector(".defaultBattleship");
+const defaultSubmarine = document.querySelector(".defaultSubmarine");
+const defaultDestroyer = document.querySelector(".defaultDestroyer");
+const defaultPatrolboat = document.querySelector(".defaultPatrolboat");
+
 const playerGameBoardObject = gameBoardFactory(10);
 
 function initializeApp() {
@@ -25,11 +32,18 @@ function initializeApp() {
   const containers = document.querySelectorAll(".container");
   console.log(shipArray);
   draggables.forEach((draggable) => {
-    draggable.addEventListener("dragstart", () => {
+    draggable.addEventListener("dragstart", (e) => {
       draggable.classList.add("dragging");
+      let targetShip =
+        e.target.classList[1].split("")[0].toUpperCase() +
+        e.target.classList[1].slice(1);
+      let variableName = `default${targetShip}`;
+      let foundElement = document.querySelector(`.${variableName}`);
+      e.target.style.height = `${foundElement.clientHeight}px`;
     });
 
     draggable.addEventListener("dragend", (e) => {
+      e.target.style.height = "100%";
       draggable.classList.remove("dragging");
       draggable.classList.remove("invisible");
     });
@@ -67,11 +81,12 @@ function initializeApp() {
   });
 
   document.addEventListener("drop", (e) => {
+    console.log(e.target);
     try {
       let ship = shipArray.find(
         (ship) => ship.name === e.target.firstChild.dataset.shipName
       );
-      if (e.target.firstChild.classList[1]) {
+      if (e.target.firstChild) {
         e.target.firstChild.style.backgroundColor = "green";
         e.target.firstChild.draggable = false;
         playerGameBoardObject.placeShip(
@@ -97,6 +112,7 @@ function initializeApp() {
     } catch (err) {
       console.log(err);
       if (e.target.firstChild) {
+        console.log(e.target.firstChild.classList);
         e.target.firstChild.style.backgroundColor = "red";
         e.target.firstChild.draggable = true;
       }

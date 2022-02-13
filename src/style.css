@@ -82,7 +82,9 @@ body {
   cursor: pointer;
 }
 
-.draggable.carrier {
+/* Deleted Explcitly Defined  */
+
+/* .draggable.carrier {
   height: calc(500% + 10px);
 }
 
@@ -97,7 +99,7 @@ body {
 
 .draggable.patrolboat {
   height: calc(200% + 4px);
-}
+} */
 
 /* want height bigger than the fill or it will look weird */
 .container {
@@ -113,4 +115,21 @@ body {
 
 .invisible {
   display: none;
+}
+
+.defaultCarrier {
+  height: 50%;
+}
+
+.defaultBattleship {
+  height: 40%;
+}
+
+.defaultSubmarine,
+.defaultDestrroyer {
+  height: 30%;
+}
+
+.defaultPatrolboat {
+  height: 20%;
 }
