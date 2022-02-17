@@ -63,7 +63,15 @@ resetGameButton.addEventListener("click", (e) => {
       document.querySelector(`.${firstCapitalized}`).append(draggable);
     }
   });
-  // console.log(space.children);
+
+  placementDirection = true;
+  shipContainer.style.flexDirection = "row";
+  document.querySelectorAll(".default").forEach((container) => {
+    container.classList.remove("horizontal");
+    container.classList.add("vertical");
+    container.querySelector(".draggable").style.width = "100%";
+    container.querySelector(".draggable").style.height = "100%";
+  });
 
   // board game approach
   // console.log(playerGameBoard.forEach((node) => console.log(node)));
@@ -72,19 +80,18 @@ resetGameButton.addEventListener("click", (e) => {
 rotateShipButton.addEventListener("click", (e) => {
   e.preventDefault();
   placementDirection = !placementDirection;
-  console.log(placementDirection);
 
   if (placementDirection === false) {
     shipContainer.style.flexDirection = "column";
-    document.querySelectorAll(".default").forEach((draggable) => {
-      draggable.classList.remove("vertical");
-      draggable.classList.add("horizontal");
+    document.querySelectorAll(".default").forEach((container) => {
+      container.classList.remove("vertical");
+      container.classList.add("horizontal");
     });
   } else {
     shipContainer.style.flexDirection = "row";
-    document.querySelectorAll(".default").forEach((draggable) => {
-      draggable.classList.remove("horizontal");
-      draggable.classList.add("vertical");
+    document.querySelectorAll(".default").forEach((container) => {
+      container.classList.remove("horizontal");
+      container.classList.add("vertical");
     });
   }
 });
