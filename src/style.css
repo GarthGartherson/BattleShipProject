@@ -14,18 +14,25 @@ nav {
   font-size: 1.5rem;
 }
 
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%;
+  margin: 0 auto;
+  padding: 2%;
+}
+
 .board-container {
   display: flex;
-  height: 70vh;
+  height: 500px;
   justify-content: space-around;
 }
 
 .board-container > .board {
-  width: 40%;
+  width: 500px;
   display: flex;
   flex-wrap: wrap;
-  min-width: 200px;
-  min-height: 200px;
   background-color: #d4f1f9;
 }
 
@@ -43,7 +50,8 @@ nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 80%;
+  width: 100%;
+  padding: 20px;
 }
 
 footer {
@@ -117,19 +125,48 @@ body {
   display: none;
 }
 
-.defaultCarrier {
+/* Vertical Ship Heights */
+
+.defaultCarrier.vertical {
   height: 50%;
 }
 
-.defaultBattleship {
+.defaultBattleship.vertical {
   height: 40%;
 }
 
-.defaultSubmarine,
-.defaultDestrroyer {
+.defaultSubmarine.vertical,
+.defaultDestroyer.vertical {
   height: 30%;
 }
 
-.defaultPatrolboat {
+.defaultPatrolboat.vertical {
   height: 20%;
+}
+
+/* Horizontal Ship Heights */
+
+.defaultCarrier.horizontal {
+  width: 50%;
+}
+
+.defaultBattleship.horizontal {
+  width: 40%;
+}
+
+.defaultSubmarine.horizontal,
+.defaultDestroyer.horizontal {
+  width: 30%;
+}
+
+.defaultPatrolboat.horizontal {
+  width: 20%;
+}
+
+.dragImageRotate {
+  transform: rotate(90deg);
+}
+
+.player-board {
+  overflow: hidden;
 }
