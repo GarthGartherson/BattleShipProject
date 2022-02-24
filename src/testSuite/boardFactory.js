@@ -23,11 +23,16 @@ const gameBoardFactory = function makeBoard(num) {
       const gridSize = Math.sqrt(this.grid.length);
 
       if (desiredAxis === "Vertical") {
-        if (placementOrigin + (ship.length - 1) * gridSize < 100)
+        if (placementOrigin + (ship.length - 1) * gridSize < 100) {
+          for (let i = 0; i < ship.length; i++) {
+            if (this.grid[placementOrigin + gridSize * i] !== "w") {
+              throw Error("Different Ship Present");
+            }
+          }
           for (let i = 0; i < ship.length; i++) {
             this.grid[placementOrigin + gridSize * i] = ship.name.toLowerCase();
           }
-        else {
+        } else {
           throw Error("Extended Past the Grid Vertically!");
         }
       } else if ((desiredAxis = "Horizontal")) {
@@ -35,6 +40,11 @@ const gameBoardFactory = function makeBoard(num) {
           placementOrigin + ship.length <=
           Math.ceil((placementOrigin + 1) / 10) * gridSize
         ) {
+          for (let i = 0; i < ship.length; i++) {
+            if (this.grid[placementOrigin + i] !== "w") {
+              throw Error("Different Shit Present");
+            }
+          }
           for (let i = 0; i < ship.length; i++) {
             this.grid[placementOrigin + i] = ship.name.toLowerCase();
           }
