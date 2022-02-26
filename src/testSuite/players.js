@@ -1,6 +1,9 @@
-
 const player1 = {
-    isTurn = true
-}
+  isTurn: true,
+};
 
-module.exports = player1;
+const computerPlayer = {
+  isTurn: false,
+};
+
+module.exports = { player1, computerPlayer };

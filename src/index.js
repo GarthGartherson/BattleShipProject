@@ -1,6 +1,7 @@
 import "./style.css";
 import gameBoardFactory from "./testSuite/boardFactory";
 import regeneratorRuntime from "regenerator-runtime";
+import { player1, computerPlayer } from "./testSuite/players";
 
 import "./testSuite/shipArray.js";
 import shipArray from "./testSuite/shipArray.js";
@@ -26,6 +27,9 @@ const defaultPatrolboat = document.querySelector(".defaultPatrolboat");
 const playerGameBoardObject = gameBoardFactory(10);
 const computerGameBoardObject = gameBoardFactory(10);
 const draggables = document.querySelectorAll(".draggable");
+const playerBoardContainers = document.querySelectorAll(
+  ".player-board > .container"
+);
 let placementDirection = true;
 
 startGameButton.addEventListener("click", () => {
@@ -40,7 +44,12 @@ startGameButton.addEventListener("click", () => {
 });
 
 function runGame() {
-  playerGameBoardObject;
+  // playerGameBoardObject;
+  draggables.forEach((draggable) => (draggable.style.opacity = 0));
+  console.log(playerBoardContainers);
+  console.log(
+    playerBoardContainers.forEach((tile) => console.log(tile.children))
+  );
   placementBoard.classList.add("hide");
   computerGameBoard.classList.remove("hide");
 
@@ -85,6 +94,46 @@ function runGame() {
   } catch (e) {
     console.log(e);
   }
+
+  // While Game Is Not Finished Take Turns
+  let gameFinished = false;
+
+  document.addEventListener("click", (e) => {
+    if (gameFinished === true) return;
+
+    let selectedTile = parseInt(
+      e.target.closest(".container").dataset.boxNumber
+    );
+
+    if (e.target.closest(".computer-board") && player1.isTurn === true) {
+      computerGameBoardObject.receiveAttack(
+        computerGameBoardObject,
+        shipArray,
+        selectedTile
+      );
+      positiveCheckBoard(computerGameBoardObject, "m", "white");
+      positiveCheckBoard(computerGameBoardObject, "h", "red");
+
+      console.log(computerGameBoardObject.grid);
+      player1.isTurn = !player1.isTurn;
+    }
+
+    if (e.target.closest(".player-board") && player1.isTurn === false) {
+      playerGameBoardObject.receiveAttack(
+        playerGameBoardObject,
+        shipArray,
+        selectedTile
+      );
+      positiveCheckBoard(playerGameBoardObject, "m", "white");
+      positiveCheckBoard(playerGameBoardObject, "h", "red");
+      console.log(playerGameBoardObject.grid);
+      // shipArray.forEach((ship) => console.log(ship.sunk(ship)));
+      player1.isTurn = !player1.isTurn;
+    }
+  });
+  // while (gameFinished === false) {
+
+  // }
 }
 
 resetGameButton.addEventListener("click", (e) => {
@@ -254,20 +303,9 @@ function initializeApp() {
           desiredAxis,
           Number(e.target.dataset.boxNumber)
         );
+        negativeCheckBoard(playerGameBoardObject, "w", "green");
       }
       // Checking What Tiles Have Ships and Changing Background Color
-      let nonEmptyBoxes = [];
-      for (let [index, box] of playerGameBoardObject.grid.entries()) {
-        if (box !== "w") {
-          nonEmptyBoxes.push(index);
-        }
-      }
-      for (let boxNumber of nonEmptyBoxes) {
-        let element = document.querySelector(
-          `[data-box-number="${boxNumber}"]`
-        );
-        element.style.backgroundColor = "green";
-      }
     } catch (err) {
       console.log(err);
       // If there is an error in placement for whatever reason it will occupy 1 space and be marked red and still be movable
@@ -279,6 +317,47 @@ function initializeApp() {
     }
     // console.log(playerGameBoardObject.grid);
   });
+}
+
+//Check If each tile ISN'T a certain string
+function negativeCheckBoard(board, string, color) {
+  let nonEmptyBoxes = [];
+  console.log(board.grid);
+  for (let [index, box] of board.grid.entries()) {
+    // if (shipArray.includes(box)) continue;
+    if (box !== `${string}`) {
+      nonEmptyBoxes.push(index);
+    }
+  }
+  for (let boxNumber of nonEmptyBoxes) {
+    let element = document.querySelector(`[data-box-number="${boxNumber}"]`);
+    element.style.backgroundColor = `${color}`;
+  }
+}
+
+// Check if each tile IS a certain string
+function positiveCheckBoard(board, string, color) {
+  let nonEmptyBoxes = [];
+  console.log(board);
+  for (let [index, box] of board.grid.entries()) {
+    if (box === `${string}`) {
+      nonEmptyBoxes.push(index);
+    }
+  }
+  for (let boxNumber of nonEmptyBoxes) {
+    if (player1.isTurn === true) {
+      let element = document.querySelector(
+        `.computer-board > [data-box-number="${boxNumber}"]`
+      );
+      element.style.backgroundColor = `${color}`;
+    }
+    if (player1.isTurn === false) {
+      let element = document.querySelector(
+        `.player-board > [data-box-number="${boxNumber}"]`
+      );
+      element.style.backgroundColor = `${color}`;
+    }
+  }
 }
 
 initializeApp();
