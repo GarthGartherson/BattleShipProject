@@ -1,6 +1,6 @@
 const receiveAttack = require("./receiveAttack");
 const boardAllSunk = require("./boardAllSunk");
-const shipArray = require("./shipArray");
+const { shipArray, computerShipArray } = require("./shipArray");
 
 const gameGrid = (num) => {
   let gameBoard = [];

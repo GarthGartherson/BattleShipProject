@@ -1,5 +1,5 @@
 const gameBoardFactory = require("./boardFactory");
-const shipArray = require("./shipArray");
+const { shipArray } = require("./shipArray");
 
 test("Makes an Object Based on Size", () => {
   expect(gameBoardFactory(1).grid).toEqual(["w"]);

@@ -4,25 +4,26 @@ import regeneratorRuntime from "regenerator-runtime";
 import { player1, computerPlayer } from "./testSuite/players";
 
 import "./testSuite/shipArray.js";
-import shipArray from "./testSuite/shipArray.js";
+import { shipArray, computerShipArray } from "./testSuite/shipArray.js";
 
 // buttons
 const rotateShipButton = document.querySelector(".button-rotate-ship");
 const startGameButton = document.querySelector(".button-start-game");
 const resetGameButton = document.querySelector(".button-reset-game");
 
-// Game Boards
+// Game Boards && Text
+const promptText = document.querySelector(".board-text");
 const playerGameBoard = document.querySelector(".player-board");
 const computerGameBoard = document.querySelector(".computer-board");
 const shipContainer = document.querySelector(".ship-container");
 const placementBoard = document.querySelector(".placement-board");
 
 // Ship Size Selectors
-const defaultCarrier = document.querySelector(".defaultCarrier");
-const defaultBattleship = document.querySelector(".defaultBattleship");
-const defaultSubmarine = document.querySelector(".defaultSubmarine");
-const defaultDestroyer = document.querySelector(".defaultDestroyer");
-const defaultPatrolboat = document.querySelector(".defaultPatrolboat");
+// const defaultCarrier = document.querySelector(".defaultCarrier");
+// const defaultBattleship = document.querySelector(".defaultBattleship");
+// const defaultSubmarine = document.querySelector(".defaultSubmarine");
+// const defaultDestroyer = document.querySelector(".defaultDestroyer");
+// const defaultPatrolboat = document.querySelector(".defaultPatrolboat");
 
 const playerGameBoardObject = gameBoardFactory(10);
 const computerGameBoardObject = gameBoardFactory(10);
@@ -30,6 +31,8 @@ const draggables = document.querySelectorAll(".draggable");
 const playerBoardContainers = document.querySelectorAll(
   ".player-board > .container"
 );
+
+// Setup
 let placementDirection = true;
 
 startGameButton.addEventListener("click", () => {
@@ -38,7 +41,6 @@ startGameButton.addEventListener("click", () => {
   let filteredDefaultContainers = defaultContainersArray.filter((container) => {
     return container.children.length > 0;
   });
-  console.log("test");
   if (filteredDefaultContainers.length !== 0) return;
   runGame();
 });
@@ -46,10 +48,7 @@ startGameButton.addEventListener("click", () => {
 function runGame() {
   // playerGameBoardObject;
   draggables.forEach((draggable) => (draggable.style.opacity = 0));
-  console.log(playerBoardContainers);
-  console.log(
-    playerBoardContainers.forEach((tile) => console.log(tile.children))
-  );
+
   placementBoard.classList.add("hide");
   computerGameBoard.classList.remove("hide");
 
@@ -97,6 +96,7 @@ function runGame() {
 
   // While Game Is Not Finished Take Turns
   let gameFinished = false;
+  promptText.textContent = "Player's Turn!";
 
   document.addEventListener("click", (e) => {
     if (gameFinished === true) return;
@@ -104,21 +104,35 @@ function runGame() {
     let selectedTile = parseInt(
       e.target.closest(".container").dataset.boxNumber
     );
-
+    // Players Turn. Checksif tile is h/m and if so then it short circuits
     if (e.target.closest(".computer-board") && player1.isTurn === true) {
-      computerGameBoardObject.receiveAttack(
+      if (computerGameBoardObject.grid[selectedTile] === "h") return;
+      if (computerGameBoardObject.grid[selectedTile] === "m") return;
+      // if not targets the enemy board
+      let boat = computerGameBoardObject.receiveAttack(
         computerGameBoardObject,
-        shipArray,
+        computerShipArray,
         selectedTile
       );
+      // runs through board checking for m's and h's and colors the spaces accordingly
       positiveCheckBoard(computerGameBoardObject, "m", "white");
       positiveCheckBoard(computerGameBoardObject, "h", "red");
 
-      console.log(computerGameBoardObject.grid);
+      if (typeof boat !== "undefined" && typeof boat === "object") {
+        if (computerGameBoardObject.boardAllSunk() === true) {
+          gameFinished = true;
+          promptText.textContent = "Player WINS!";
+        }
+      }
+      if (gameFinished == true) return;
       player1.isTurn = !player1.isTurn;
+      promptText.textContent = "Computer's Turn";
     }
 
     if (e.target.closest(".player-board") && player1.isTurn === false) {
+      if (playerGameBoardObject.grid[selectedTile] === "h") return;
+      if (playerGameBoardObject.grid[selectedTile] === "m") return;
+      console.log(playerGameBoardObject.grid[selectedTile]);
       playerGameBoardObject.receiveAttack(
         playerGameBoardObject,
         shipArray,
@@ -126,17 +140,35 @@ function runGame() {
       );
       positiveCheckBoard(playerGameBoardObject, "m", "white");
       positiveCheckBoard(playerGameBoardObject, "h", "red");
-      console.log(playerGameBoardObject.grid);
-      // shipArray.forEach((ship) => console.log(ship.sunk(ship)));
+
+      console.log(typeof boat);
+      // NEED TO FIGURE OUT WHAT IS GOING ON
+      // WITH THE ALL SINK FUNCTION
+
+      if (typeof boat !== "undefined" && typeof boat === "object") {
+        console.log(playerGameBoardObject.boardAllSunk());
+        if (playerGameBoardObject.boardAllSunk() == true) {
+          gameFinished = true;
+          promptText.textContent = "Computer WINS!";
+        }
+      }
+      if (gameFinished == true) return;
       player1.isTurn = !player1.isTurn;
+      promptText.textContent = "Player's Turn";
     }
   });
-  // while (gameFinished === false) {
-
-  // }
 }
 
 resetGameButton.addEventListener("click", (e) => {
+  shipArray.forEach((ship) => {
+    ship.isSunk = false;
+    ship.spaces.forEach((space) => (space = "o"));
+  });
+  computerShipArray.forEach((ship) => {
+    ship.isSunk = false;
+    ship.spaces.forEach((space) => (space = "o"));
+  });
+
   playerGameBoardObject.grid.forEach((tile, index) => {
     if (tile !== "w") {
       playerGameBoardObject.grid[index] = "w";
@@ -164,7 +196,6 @@ resetGameButton.addEventListener("click", (e) => {
     space.style.backgroundColor = "#d4f1f9";
     if (space.hasChildNodes === true) {
       const element = space.querySelector(".draggable");
-      console.log(element);
       space.remove(element);
       space.style.backgroundColor = "";
     }
@@ -175,6 +206,7 @@ resetGameButton.addEventListener("click", (e) => {
 
     if (!draggable.closest(".container").classList.contains("default")) {
       draggable.style.backgroundColor = "grey";
+      draggable.style.opacity = "1";
       let firstCapitalized =
         "default" +
         draggable.classList[1].split("")[0].toUpperCase() +
@@ -191,9 +223,6 @@ resetGameButton.addEventListener("click", (e) => {
     container.querySelector(".draggable").style.width = "100%";
     container.querySelector(".draggable").style.height = "100%";
   });
-
-  // board game approach
-  // console.log(playerGameBoard.forEach((node) => console.log(node)));
 });
 
 rotateShipButton.addEventListener("click", (e) => {
@@ -310,19 +339,16 @@ function initializeApp() {
       console.log(err);
       // If there is an error in placement for whatever reason it will occupy 1 space and be marked red and still be movable
       if (e.target.firstChild) {
-        console.log(e.target.firstChild.classList);
         e.target.firstChild.style.backgroundColor = "red";
         e.target.firstChild.draggable = true;
       }
     }
-    // console.log(playerGameBoardObject.grid);
   });
 }
 
 //Check If each tile ISN'T a certain string
 function negativeCheckBoard(board, string, color) {
   let nonEmptyBoxes = [];
-  console.log(board.grid);
   for (let [index, box] of board.grid.entries()) {
     // if (shipArray.includes(box)) continue;
     if (box !== `${string}`) {
@@ -338,7 +364,6 @@ function negativeCheckBoard(board, string, color) {
 // Check if each tile IS a certain string
 function positiveCheckBoard(board, string, color) {
   let nonEmptyBoxes = [];
-  console.log(board);
   for (let [index, box] of board.grid.entries()) {
     if (box === `${string}`) {
       nonEmptyBoxes.push(index);

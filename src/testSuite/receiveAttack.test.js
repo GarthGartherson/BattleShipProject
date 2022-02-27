@@ -1,6 +1,6 @@
 const gameBoardFactory = require("./boardFactory");
 const shipFactoryFunction = require("./shipFactoryFunction");
-const shipArray = require("./shipArray");
+const { shipArray } = require("./shipArray");
 
 // const ship1 = shipFactoryFunction("Alpha", 5);
 // const ship2 = shipFactoryFunction("Beta", 5);

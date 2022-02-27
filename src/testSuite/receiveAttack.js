@@ -9,11 +9,12 @@ const receiveAttack = (gameboard, shipArray, tile) => {
     for (boat of shipArray) {
       if (boat.name == gameboard.grid[tile]) {
         hitShip(boat);
+        gameboard.grid[tile] = "h";
+        return boat;
       }
     }
     // Create Ship Aray to Loop through checking for match..... could do constant lookup in objecT?
     //needs to find ship and put that through the function to mark as hit..... somewhere?
-    gameboard.grid[tile] = "h";
   }
 };
 
