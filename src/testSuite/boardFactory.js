@@ -42,7 +42,7 @@ const gameBoardFactory = function makeBoard(num) {
         ) {
           for (let i = 0; i < ship.length; i++) {
             if (this.grid[placementOrigin + i] !== "w") {
-              throw Error("Different Shit Present");
+              throw Error("Different Ship Present");
             }
           }
           for (let i = 0; i < ship.length; i++) {

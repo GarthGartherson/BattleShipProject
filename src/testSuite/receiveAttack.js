@@ -1,4 +1,5 @@
 const hitShip = require("./hitShip");
+const sunk = require("./sunk");
 
 const receiveAttack = (gameboard, shipArray, tile) => {
   if (gameboard.grid[tile] === "m" || gameboard.grid[tile] === "h") {
@@ -9,6 +10,7 @@ const receiveAttack = (gameboard, shipArray, tile) => {
     for (boat of shipArray) {
       if (boat.name == gameboard.grid[tile]) {
         hitShip(boat);
+        sunk(boat);
         gameboard.grid[tile] = "h";
         return boat;
       }

@@ -1,7 +1,7 @@
 import "./style.css";
 import gameBoardFactory from "./testSuite/boardFactory";
 import regeneratorRuntime from "regenerator-runtime";
-import { player1, computerPlayer } from "./testSuite/players";
+import { player1 } from "./testSuite/players";
 
 import "./testSuite/shipArray.js";
 import { shipArray, computerShipArray } from "./testSuite/shipArray.js";
@@ -17,13 +17,6 @@ const playerGameBoard = document.querySelector(".player-board");
 const computerGameBoard = document.querySelector(".computer-board");
 const shipContainer = document.querySelector(".ship-container");
 const placementBoard = document.querySelector(".placement-board");
-
-// Ship Size Selectors
-// const defaultCarrier = document.querySelector(".defaultCarrier");
-// const defaultBattleship = document.querySelector(".defaultBattleship");
-// const defaultSubmarine = document.querySelector(".defaultSubmarine");
-// const defaultDestroyer = document.querySelector(".defaultDestroyer");
-// const defaultPatrolboat = document.querySelector(".defaultPatrolboat");
 
 const playerGameBoardObject = gameBoardFactory(10);
 const computerGameBoardObject = gameBoardFactory(10);
@@ -46,6 +39,11 @@ startGameButton.addEventListener("click", () => {
 });
 
 function runGame() {
+  let remainingSpaces = [];
+  for (let i = 0; i < 100; i++) {
+    remainingSpaces.push(i);
+  }
+
   // playerGameBoardObject;
   draggables.forEach((draggable) => (draggable.style.opacity = 0));
 
@@ -119,7 +117,7 @@ function runGame() {
       positiveCheckBoard(computerGameBoardObject, "h", "red");
 
       if (typeof boat !== "undefined" && typeof boat === "object") {
-        if (computerGameBoardObject.boardAllSunk() === true) {
+        if (computerGameBoardObject.boardAllSunk(computerShipArray) === true) {
           gameFinished = true;
           promptText.textContent = "Player WINS!";
         }
@@ -130,24 +128,23 @@ function runGame() {
     }
 
     if (e.target.closest(".player-board") && player1.isTurn === false) {
+      let randomArrayPosiition = Math.floor(
+        Math.random() * remainingSpaces.length
+      );
+      remainingSpaces.splice(randomArrayPosiition, 1);
+
       if (playerGameBoardObject.grid[selectedTile] === "h") return;
       if (playerGameBoardObject.grid[selectedTile] === "m") return;
-      console.log(playerGameBoardObject.grid[selectedTile]);
       playerGameBoardObject.receiveAttack(
         playerGameBoardObject,
         shipArray,
-        selectedTile
+        randomArrayPosiition
       );
       positiveCheckBoard(playerGameBoardObject, "m", "white");
       positiveCheckBoard(playerGameBoardObject, "h", "red");
 
-      console.log(typeof boat);
-      // NEED TO FIGURE OUT WHAT IS GOING ON
-      // WITH THE ALL SINK FUNCTION
-
       if (typeof boat !== "undefined" && typeof boat === "object") {
-        console.log(playerGameBoardObject.boardAllSunk());
-        if (playerGameBoardObject.boardAllSunk() == true) {
+        if (playerGameBoardObject.boardAllSunk(shipArray) == true) {
           gameFinished = true;
           promptText.textContent = "Computer WINS!";
         }
@@ -160,6 +157,7 @@ function runGame() {
 }
 
 resetGameButton.addEventListener("click", (e) => {
+  promptText.textContent = "Place Your Ships!";
   shipArray.forEach((ship) => {
     ship.isSunk = false;
     ship.spaces.forEach((space) => (space = "o"));
@@ -303,6 +301,7 @@ function initializeApp() {
       }
 
       if (draggable && draggable.draggable === true) {
+        if (container.firstChild) return;
         container.appendChild(draggable);
         setTimeout(() => {
           draggable.classList.add("invisible");
